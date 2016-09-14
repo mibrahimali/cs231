@@ -93,10 +93,11 @@ class TwoLayerNet(object):
     # classifier loss. So that your results match ours, multiply the            #
     # regularization loss by 0.5                                                #
     #############################################################################
+    scores -= np.max(scores)
     exp_scores = np.exp(scores)
     probabilites = exp_scores / np.sum(exp_scores, axis=1,keepdims=True)
     corerect_probability = probabilites[range(N),y]
-    loss = np.sum( -1 * np.log(corerect_probability)) / N
+    loss = np.sum( -1 * np.log(corerect_probability)) / float(N)
     loss += 0.5 * reg * np.sum(W1*W1) + 0.5 * reg * np.sum(W2*W2)  # adding Regualization loss
 
     #############################################################################
@@ -112,7 +113,7 @@ class TwoLayerNet(object):
     #############################################################################
     one_condition = np.zeros_like(probabilites)
     one_condition[range(N),y] = 1
-    output_error = (probabilites - one_condition)/N
+    output_error = (probabilites - one_condition) / float(N)
     grads['W2'] =  hidden_layer.T.dot(output_error) + reg * W2
     grads['b2'] = np.sum(output_error,axis=0,keepdims=True)
 
@@ -123,7 +124,6 @@ class TwoLayerNet(object):
     #############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
-
     return loss, grads
 
   def train(self, X, y, X_val, y_val,
