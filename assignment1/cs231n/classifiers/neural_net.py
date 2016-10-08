@@ -114,13 +114,18 @@ class TwoLayerNet(object):
     one_condition = np.zeros_like(probabilites)
     one_condition[range(N),y] = 1
     output_error = (probabilites - one_condition) / float(N)
-    grads['W2'] =  hidden_layer.T.dot(output_error) + reg * W2
-    grads['b2'] = np.sum(output_error,axis=0,keepdims=True)
+    grad_w2 = hidden_layer.T.dot(output_error) + reg * W2
+    grad_b2 = np.sum(output_error,axis=0,keepdims=True)
+    #grads['W2'] =  hidden_layer.T.dot(output_error) + reg * W2
+    #grads['b2'] = np.sum(output_error,axis=0,keepdims=True)
 
     hidden_layer_error = output_error.dot(W2.T)
     hidden_layer_error[hidden_layer <= 0] = 0  # revert effect of ReLU non-linearity (max(0,x))
-    grads['W1'] = X.T.dot(hidden_layer_error) + reg * W1
-    grads['b1'] = np.sum(hidden_layer_error,axis=0,keepdims=True)
+    #grads['W1'] = X.T.dot(hidden_layer_error) + reg * W1
+    #grads['b1'] = np.sum(hidden_layer_error,axis=0,keepdims=True)
+    grad_w1 = X.T.dot(hidden_layer_error) + reg * W1
+    grad_b1= np.sum(hidden_layer_error,axis=0,keepdims=True)
+    grads = {'W1':grad_w1,'b1':grad_b1,'W2':grad_w2,'b2':grad_b2}
     #############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
